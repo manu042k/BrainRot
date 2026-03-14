@@ -3,14 +3,14 @@ import type p5Type from 'p5';
 import { BaseFullscreenComponent } from '../core/base-fullscreen.component';
 import { BackButtonComponent } from '../core/back-button.component';
 @Component({
-  selector: 'app-organism-bg',
+  selector: 'app-jellyfish',
   standalone: true,
   template: `
     <app-back-button></app-back-button>
-    <div class="organism-container" #visualsContainer></div>
+    <div class="jellyfish-container" #visualsContainer></div>
   `,
   styles: [`
-    .organism-container {
+    .jellyfish-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -20,13 +20,13 @@ import { BackButtonComponent } from '../core/back-button.component';
       background: #05050a;
       z-index: -1;
     }
-    .organism-container canvas {
+    .jellyfish-container canvas {
       display: block;
     }
   `],
   imports: [BackButtonComponent]
 })
-export class OrganismBgComponent extends BaseFullscreenComponent {
+export class JellyfishComponent extends BaseFullscreenComponent {
   private p5Instance!: p5Type;
 
   protected async initVisuals() {
