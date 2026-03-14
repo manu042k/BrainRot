@@ -1,10 +1,14 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import type p5Type from 'p5';
-
+import { BaseFullscreenComponent } from '../core/base-fullscreen.component';
+import { BackButtonComponent } from '../core/back-button.component';
 @Component({
   selector: 'app-organism-bg',
   standalone: true,
-  template: '<div class="organism-container" #sketchContainer></div>',
+  template: `
+    <app-back-button></app-back-button>
+    <div class="organism-container" #visualsContainer></div>
+  `,
   styles: [`
     .organism-container {
       position: fixed;
@@ -20,23 +24,12 @@ import type p5Type from 'p5';
       display: block;
     }
   `],
-  encapsulation: ViewEncapsulation.None
+  imports: [BackButtonComponent]
 })
-export class OrganismBgComponent implements OnInit, OnDestroy {
-  @ViewChild('sketchContainer', { static: true }) sketchContainer!: ElementRef;
+export class OrganismBgComponent extends BaseFullscreenComponent {
   private p5Instance!: p5Type;
 
-  ngOnInit() {
-    this.createSketch();
-  }
-
-  ngOnDestroy() {
-    if (this.p5Instance) {
-      this.p5Instance.remove();
-    }
-  }
-
-  private async createSketch() {
+  protected async initVisuals() {
     if (typeof window === 'undefined') return;
     const p5Module = await import('p5');
     const p5 = p5Module.default || p5Module;
@@ -79,7 +72,7 @@ export class OrganismBgComponent implements OnInit, OnDestroy {
       };
 
       p.setup = () => {
-        const el = this.sketchContainer.nativeElement;
+        const el = this.visualsContainer.nativeElement;
         p.createCanvas(el.offsetWidth, el.offsetHeight);
         p.background(0, 5, 10); // Deep ocean water
       };
@@ -241,12 +234,18 @@ export class OrganismBgComponent implements OnInit, OnDestroy {
       };
 
       p.windowResized = () => {
-        const el = this.sketchContainer.nativeElement;
+        const el = this.visualsContainer.nativeElement;
         p.resizeCanvas(el.offsetWidth, el.offsetHeight);
         p.background(0, 5, 10);
       };
     };
 
-    this.p5Instance = new (p5 as any)(sketch, this.sketchContainer.nativeElement);
+    this.p5Instance = new (p5 as any)(sketch, this.visualsContainer.nativeElement);
+  }
+
+  protected destroyVisuals() {
+    if (this.p5Instance) {
+      this.p5Instance.remove();
+    }
   }
 }

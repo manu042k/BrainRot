@@ -1,0 +1,36 @@
+<div class="landing-container">
+  <header class="header">
+    <div class="logo-container">
+      <div class="logo-icon">🧠</div>
+      <h1 class="logo-text">Brain Rot<span class="highlight">.Space</span></h1>
+    </div>
+    <p class="subtitle">A repository of experimental, highly visual web components.</p>
+  </header>
+
+  <main class="content">
+    <div class="components-grid">
+      <!-- Component Card -->
+      <div class="card" *ngFor="let comp of components">
+        <div class="card-glass-bg"></div>
+        <div class="card-content">
+          <header class="card-header">
+            <span class="card-icon">{{ comp.icon }}</span>
+            <span class="status-badge" [ngClass]="{
+              'status-ready': comp.status === 'Ready',
+              'status-planned': comp.status === 'Planned'
+            }">
+              {{ comp.status }}
+            </span>
+          </header>
+          <h2 class="card-title">{{ comp.name }}</h2>
+          <p class="card-description">{{ comp.description }}</p>
+          <div class="card-footer">
+            <button class="action-btn" [disabled]="comp.status !== 'Ready'" [routerLink]="comp.status === 'Ready' ? comp.route : null">
+              {{ comp.status === 'Ready' ? 'Launch Component' : 'Coming Soon' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
